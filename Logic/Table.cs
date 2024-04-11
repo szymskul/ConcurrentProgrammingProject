@@ -39,6 +39,12 @@ namespace Logic
             }
         }
 
+        public void Complete()
+        {
+            movingTask = new Task(ConstanceMove);
+            movingTask.Start();
+        }
+
         public void ConstanceMove() 
         {
             while (true)
