@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic
 {
@@ -16,10 +14,10 @@ namespace Logic
 
         public Ball()
         {
-            x = getRandomNumber(10.0, 100.0);
-            y = getRandomNumber(10.0, 100.0);
-            velocityX = getRandomNumber(10, 100);   
-            velocityY = getRandomNumber(10, 100);
+            x = getRandomNumber(5.0, 100.0);
+            y = getRandomNumber(5.0, 100.0);
+            velocityX = getRandomNumber(1.0, 15.0);   
+            velocityY = getRandomNumber(1.0, 15.0);
 
             r = 5;
         }
@@ -30,7 +28,7 @@ namespace Logic
             return random.NextDouble() * (max - min) + min;  
         }
 
-        public void Moving(double height, double width)
+        public void ChangingPosition(double height, double width)
         {
             double next_x = x + velocityX;
             double next_y = y + velocityY;

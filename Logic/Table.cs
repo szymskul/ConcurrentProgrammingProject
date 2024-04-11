@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Logic
 {
@@ -11,6 +11,9 @@ namespace Logic
         public int height { get; set; }
         public int widht { get; set; }
         public List<Ball> balls { get; set; }
+
+        private Task movingTask;
+        private int time = 20;
 
         public Table(int height, int width) 
         {
@@ -26,6 +29,25 @@ namespace Logic
                 balls.Add(new Ball());
             }
         }
+
+        public void MovingBalls() 
+        {
+            foreach(Ball ball in balls) 
+            {
+                ball.ChangingPosition(height, widht);
+
+            }
+        }
+
+        public void ConstanceMove() 
+        {
+            while (true)
+            {
+                MovingBalls();
+                Thread.Sleep(time);
+            }
+        }
+
 
       
     }
