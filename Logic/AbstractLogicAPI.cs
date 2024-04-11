@@ -3,43 +3,50 @@ namespace Logic
 {
     public abstract class LogicAbstractAPI
     {
-        public abstract void createTable(int widght, int height);
         public abstract void createBalls(int count);
-        public abstract List<List<double>> getAllBalls();
+        public abstract List<Ball> getAllBalls();
+        public abstract void start();
+        public static LogicAbstractAPI CreateAPI(DataAbstractAPI data = default(DataAbstractAPI)) 
+        {
+            return new LogicLayerAPI(data == null ? DataAbstractAPI.CreateAPI() : data);
+        }
+
+
 
 
     }
-    internal class LogicLayerrAPI : LogicAbstractAPI
+    internal class LogicLayerAPI : LogicAbstractAPI
     {
-        internal List<BallInterface> ListOfActiveBalls {  get; set; }
+        private DataAbstractAPI data;
+        private Table table;
+        private Task movingTask;
+
+        public LogicLayerAPI(DataAbstractAPI data)
+        {
+            this.data = data;
+            table = new Table(200, 150);
+        }
+
         public override void createBalls(int count)
         {
-            throw new NotImplementedException();
+            table.AddBalls(count);
         }
 
-        public override void createTable(int widght, int height)
+        public override List<Ball> getAllBalls() 
         {
-            throw new NotImplementedException();
+            return table.balls;
         }
 
-        public override List<List<double>> getAllBalls()
+        public override void start() 
         {
-            List<List<double>> ListOfBalls = new List<List<double>>();
-            for (int i = 0; i < ListOfActiveBalls.Count; i++) 
+            if (table.balls.Count > 0)
             { 
-                double X = ListOfActiveBalls[i].X;
-                double Y = ListOfActiveBalls[i].Y;
-
-                List<double> BallCoords = new List<double>()
-                {
-                   X,
-                   Y
-                };
-                ListOfBalls.Add(BallCoords);
+                movingTask = Task.Run(table.ConstanceMove);
             }
-            return ListOfBalls;
         }
 
-        
+
+
+
     }
 }
