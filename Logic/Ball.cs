@@ -10,13 +10,13 @@ namespace Logic
         public double y { get; set; }
         public double velocityX { get; set; }
         public double velocityY { get; set; }
-        public double r {  get; set; }
+        public double r { get; set; }
 
         public Ball()
         {
             x = getRandomNumber(5.0, 100.0);
             y = getRandomNumber(5.0, 100.0);
-            velocityX = getRandomNumber(1.0, 15.0);   
+            velocityX = getRandomNumber(1.0, 15.0);
             velocityY = getRandomNumber(1.0, 15.0);
 
             r = 5;
@@ -25,7 +25,7 @@ namespace Logic
         Random random = new Random();
         public double getRandomNumber(double min, double max)
         {
-            return random.NextDouble() * (max - min) + min;  
+            return random.NextDouble() * (max - min) + min;
         }
 
         public void ChangingPosition(double height, double width)
@@ -45,7 +45,5 @@ namespace Logic
             y = next_y;
         }
 
-
-        
     }
 }

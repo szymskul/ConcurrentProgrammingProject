@@ -6,7 +6,7 @@ namespace Model
     {
         private Ball ball;
 
-        public BallModel(BallModel ball)
+        public BallModel(Ball ball)
         {
             this.ball = ball;
         }

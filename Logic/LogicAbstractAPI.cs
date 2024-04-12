@@ -6,7 +6,7 @@ namespace Logic
         public abstract void createBalls(int count);
         public abstract List<Ball> getAllBalls();
         public abstract void start();
-        public static LogicAbstractAPI CreateAPI(DataAbstractAPI data = default(DataAbstractAPI)) 
+        public static LogicAbstractAPI CreateAPI(DataAbstractAPI data = default(DataAbstractAPI))
         {
             return new LogicLayerAPI(data == null ? DataAbstractAPI.CreateAPI() : data);
         }
@@ -32,15 +32,15 @@ namespace Logic
             table.AddBalls(count);
         }
 
-        public override List<Ball> getAllBalls() 
+        public override List<Ball> getAllBalls()
         {
             return table.balls;
         }
 
-        public override void start() 
+        public override void start()
         {
             if (table.balls.Count > 0)
-            { 
+            {
                 movingTask = Task.Run(table.ConstanceMove);
             }
         }

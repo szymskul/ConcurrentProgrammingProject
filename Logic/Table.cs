@@ -15,7 +15,7 @@ namespace Logic
         private Task movingTask;
         private int time = 20;
 
-        public Table(int height, int width) 
+        public Table(int height, int width)
         {
             this.height = height;
             this.widht = width;
@@ -24,15 +24,15 @@ namespace Logic
 
         public void AddBalls(int count)
         {
-            for(int i = 0; i < count; i++) 
+            for (int i = 0; i < count; i++)
             {
                 balls.Add(new Ball());
             }
         }
 
-        public void MovingBalls() 
+        public void MovingBalls()
         {
-            foreach(Ball ball in balls) 
+            foreach (Ball ball in balls)
             {
                 ball.ChangingPosition(height, widht);
 
@@ -45,7 +45,7 @@ namespace Logic
             movingTask.Start();
         }
 
-        public void ConstanceMove() 
+        public void ConstanceMove()
         {
             while (true)
             {
@@ -53,8 +53,5 @@ namespace Logic
                 Thread.Sleep(time);
             }
         }
-
-
-      
     }
 }
