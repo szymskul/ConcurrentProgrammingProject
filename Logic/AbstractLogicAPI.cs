@@ -44,9 +44,5 @@ namespace Logic
                 movingTask = Task.Run(table.ConstanceMove);
             }
         }
-
-
-
-
     }
 }
