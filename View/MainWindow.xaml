@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="850">
     <Grid>
+        <Grid x:Name="ConcurrentProgramming_GameMainWindows" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="ConcurrentProgramming Game" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Grid.Row="1" Margin="50">
+                <TextBlock Text="Liczba kulek: " FontSize="20"/>
+                <TextBox x:Name="intputText" Text="{Binding TextMethod}" FontSize="20" TextAlignment="Center" BorderBrush="Gray" BorderThickness="2"/>
+                <Button x:Name="startButton" Content="START" FontSize="25" Margin="0,20,0,0" IsEnabled="{Binding Active}" Command="{Binding StartButtonClicked}" HorizontalAlignment="Center" Width="120" Click="startButton_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="billardTable" Visibility="Collapsed">
+            <Border BorderBrush="LightGray" Background="ForestGreen" BorderThickness="3" Margin="20">
+                <ItemsControl ItemsSource="{Binding balls}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Height="500" Width="500" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width= "20" Height="20" Fill="Red" Stroke="Black" StrokeThickness="0.5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Border>
+        </Grid>
     </Grid>
 </Window>
