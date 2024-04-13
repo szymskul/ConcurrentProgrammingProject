@@ -14,12 +14,12 @@ namespace Logic
 
         public Ball()
         {
-            x = getRandomNumber(5.0, 100.0);
-            y = getRandomNumber(5.0, 100.0);
-            velocityX = getRandomNumber(1.0, 15.0);
-            velocityY = getRandomNumber(1.0, 15.0);
+            x = getRandomNumber(10.0, 490.0);
+            y = getRandomNumber(10.0, 490.0);
+            velocityX = getRandomNumber(1.0, 2);
+            velocityY = getRandomNumber(1.0, 2);
 
-            r = 5;
+            r = 10;
         }
 
         Random random = new Random();
@@ -33,11 +33,11 @@ namespace Logic
             double next_x = x + velocityX;
             double next_y = y + velocityY;
 
-            if (next_x + r > width || next_x < r)
+            if (next_x + r > width || next_x < 0)
             {
                 velocityX *= -1.0;
             }
-            if (next_y + r > height || next_y < r)
+            if (next_y + r > height || next_y < 0)
             {
                 velocityY *= -1.0;
             }
