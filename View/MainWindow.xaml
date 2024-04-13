@@ -19,7 +19,6 @@
                 <TranslateTransform/>
             </TransformGroup>
         </StackPanel.RenderTransform>
-
         <Canvas Width="436" Height="684">
             <Grid RenderTransformOrigin="0.5,0.5" Canvas.Left="28">
                 <Grid.ColumnDefinitions>
@@ -41,18 +40,17 @@
                     <RowDefinition Height="29*"/>
                     <RowDefinition Height="39*"/>
                 </Grid.RowDefinitions>
-                <Button x:Name="startButton" Content="START" FontSize="25" Margin="0,163,109,575" IsEnabled="{Binding Active}" Command="{Binding ButtonClicked}" Grid.Row="1" HorizontalAlignment="Right" Width="147" Click="startButton_Click" />
-                <Label FontSize="25" Foreground="Black" Margin="-170,173,681,573" Content="{Binding ErrorMessage}" Grid.Row="1"/>
-                <TextBox IsEnabled="{Binding Active}" Name="intputText" Text="{Binding numberOfBalls}" FontSize="30" TextAlignment="Center" BorderBrush="Gray"  BorderThickness="2" Margin="419,89,119,670" Grid.Row="1"/>
-                <TextBlock VerticalAlignment="Top" Margin="415,41,105,0" Grid.Row="1" Height="63" FontSize="30"><Run Language="pl-pl" Text="Liczba kulek: "/></TextBlock>
+                <Button x:Name="startButton" Content="START GAME" FontSize="25" Margin="0,66,331,803" IsEnabled="{Binding Active}" Command="{Binding ButtonClicked}" HorizontalAlignment="Right" Width="177" Click="startButton_Click" Grid.Row="1" />
+                <TextBox IsEnabled="{Binding Active}" Name="intputText" Text="{Binding numberOfBalls}" FontSize="40" TextAlignment="Center" BorderBrush="Gray"  BorderThickness="2" Margin="86,68,557,804" Grid.Row="1"/>
+                <TextBlock VerticalAlignment="Top" Margin="-156,81,799,0" Grid.Row="1" Height="47" FontSize="30"><Run Language="pl-pl" Text="Number of balls: "/></TextBlock>
+                <TextBlock Text="TPW - Game" FontSize="45" FontWeight="Bold" HorizontalAlignment="Left" Margin="62,5,0,891" Width="275" Grid.RowSpan="2"/>
+                <Grid x:Name="board" Width="700" Height="500" Margin="136,190,36,260" Grid.RowSpan="2" >
 
-                <Grid x:Name="board" Width="500" Height="500" Margin="136,43,36,260" Grid.RowSpan="2" >
-
-                    <Border BorderBrush="Gray" Background="DarkGreen" BorderThickness="3" Margin="-304,-25,289,11">
+                    <Border BorderBrush="Gray" Background="Green" BorderThickness="3" Margin="-304,-25,289,11">
                         <ItemsControl ItemsSource="{Binding balls}" Margin="0,0,3,3">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas Height="NaN" Width="NaN" Margin="-3,0,-6,-6"/>
+                                    <Canvas Height="575" Width="775" Margin="-3,0,-6,-6"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
 
@@ -64,8 +62,8 @@
 
                             <ItemsControl.ItemContainerStyle>
                                 <Style TargetType="ContentPresenter">
-                                    <Setter  Property="Canvas.Top" Value="{Binding Y}"/>
-                                    <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                    <Setter  Property="Canvas.Top" Value="{Binding Yposition}"/>
+                                    <Setter Property="Canvas.Left" Value="{Binding Xposition}"/>
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>

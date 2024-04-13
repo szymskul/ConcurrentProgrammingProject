@@ -24,7 +24,7 @@ namespace Logic
         public LogicLayerAPI(DataAbstractAPI data)
         {
             this.data = data;
-            table = new Table(500, 500);
+            table = new Table(500, 700);
         }
 
         public override void createBalls(int count)

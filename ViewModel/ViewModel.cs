@@ -17,8 +17,6 @@ namespace ViewModel
             string textToInteger;
             private Task task;
             private bool active;
-            private bool nonactive = false;
-            private string errorMessage;
 
             public ViewModel() : this(ModelAbstractApi.CreateApi())
             { 
@@ -68,12 +66,9 @@ namespace ViewModel
                 if (Int32.TryParse(numberOfBalls, out result) && numberOfBalls != "0")
                 {
                     result = Int32.Parse(numberOfBalls);
-                    errorMessage = " ";
-                    active = !active;
-                    nonactive = !nonactive;
+                    Active = !Active;
                     return result;
                 }
-                errorMessage = "Zla";
                 return 0;
             }
             public string numberOfBalls
@@ -87,19 +82,6 @@ namespace ViewModel
 
             }
 
-        public bool NotActive
-        {
-            get
-            {
-                return nonactive;
-            }
-            set
-            {
-                nonactive = value;
-                RaisePropertyChanged(nameof(NotActive));
-            }
-        }
-
         public bool Active
         {
             get
@@ -110,19 +92,6 @@ namespace ViewModel
             {
                 active = value;
                 RaisePropertyChanged(nameof(Active));
-            }
-        }
-
-        public string ErrorMessage
-        {
-            get
-            {
-                return errorMessage;
-            }
-            set
-            {
-                errorMessage = value;
-                RaisePropertyChanged(nameof(ErrorMessage));
             }
         }
     }

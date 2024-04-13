@@ -11,12 +11,12 @@ namespace Model
             this.ball = ball;
         }
 
-        public double X
+        public double Xposition
         {
             get { return ball.x; }
         }
 
-        public double Y
+        public double Yposition
         {
             get { return ball.y; }
         }
