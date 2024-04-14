@@ -1,11 +1,16 @@
+﻿using Logic;
+
 namespace LogicTest
 {
-    [TestClass]
-    public class UnitTest1
+    internal class LogicApiTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestLogicApi()
         {
+            LogicAbstractAPI test = LogicAbstractAPI.CreateAPI();
+            test.createBalls(2);
+            Assert.IsNotNull(test);
+            Assert.AreEqual(test.getAllBalls().Count, 2);
         }
     }
 }
