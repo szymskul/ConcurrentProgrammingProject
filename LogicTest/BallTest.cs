@@ -11,9 +11,9 @@ namespace LogicTest
             Ball ball = new Ball();
             double prev_x = ball.x;
             double prev_y = ball.y;
-            ball.ChangingPosition(200, 250);
+            ball.ChangingPosition(700, 500);
             Assert.AreEqual(ball.x, prev_x + ball.velocityX);
-            Assert.AreEqual(ball.x, prev_y + ball.velocityY);   
+            Assert.AreEqual(ball.y, prev_y + ball.velocityY);   
         }
     }
 }
