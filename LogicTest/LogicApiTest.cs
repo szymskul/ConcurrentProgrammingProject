@@ -1,13 +1,19 @@
-﻿using Logic;
+﻿using Data;
+using Logic;
 
 namespace LogicTest
 {
+    internal class fakeClassDataAbstractApi : DataAbstractAPI
+    {
+
+    }
     internal class LogicApiTest
     {
         [TestMethod]
         public void TestLogicApi()
         {
-            LogicAbstractAPI test = LogicAbstractAPI.CreateAPI();
+            fakeClassDataAbstractApi fake = new fakeClassDataAbstractApi();
+            LogicAbstractAPI test = LogicAbstractAPI.CreateAPI(fake);
             test.createBalls(2);
             Assert.IsNotNull(test);
             Assert.AreEqual(test.getAllBalls().Count, 2);
