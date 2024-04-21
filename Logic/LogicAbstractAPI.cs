@@ -4,7 +4,7 @@ namespace Logic
     public abstract class LogicAbstractAPI
     {
         public abstract void createBalls(int count);
-        public abstract List<Ball> getAllBalls();
+        public abstract List<IBall> getAllBalls();
         public abstract void start();
         public static LogicAbstractAPI CreateAPI(DataAbstractAPI data = default(DataAbstractAPI))
         {
@@ -32,7 +32,7 @@ namespace Logic
             table.AddBalls(count);
         }
 
-        public override List<Ball> getAllBalls()
+        public override List<IBall> getAllBalls()
         {
             return table.balls;
         }

@@ -7,7 +7,7 @@ namespace Model
 {
     public abstract class ModelAbstractApi
     {
-        public abstract List<BallModel> balls { get; }
+        public abstract List<IModelBall> balls { get; }
 
         public abstract void GenerateBalls(int counts);
 
@@ -21,7 +21,7 @@ namespace Model
     {
         private LogicAbstractAPI logicApi;
 
-        public override List<BallModel> balls => copyBallList();
+        public override List<IModelBall> balls => copyBallList();
 
         public ModelLayerApi()
         {
@@ -35,11 +35,11 @@ namespace Model
 
         }
 
-        public List<BallModel> copyBallList()
+        public List<IModelBall> copyBallList()
         {
-            List<BallModel> ballsModel = new List<BallModel>();
+            List<IModelBall> ballsModel = new List<IModelBall>();
 
-            foreach (Ball b in logicApi.getAllBalls())
+            foreach (IBall b in logicApi.getAllBalls())
             {
                 ballsModel.Add(new BallModel(b));
             }

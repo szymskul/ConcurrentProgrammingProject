@@ -2,23 +2,23 @@
 
 namespace Model
 {
-    public class BallModel
+    internal class BallModel : IModelBall
     {
-        private Ball ball;
+        private IBall ball;
 
-        public BallModel(Ball ball)
+        public BallModel(IBall ball)
         {
             this.ball = ball;
         }
 
-        public double Xposition
+        public override double Xposition
         {
-            get { return ball.x; }
+            get { return ball.X; }
         }
 
-        public double Yposition
+        public override double Yposition
         {
-            get { return ball.y; }
+            get { return ball.Y; }
         }
     }
 }

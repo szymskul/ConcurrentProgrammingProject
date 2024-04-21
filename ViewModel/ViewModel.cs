@@ -10,7 +10,7 @@ namespace ViewModel
         public class ViewModel : INotifyPropertyChanged
         {
             private readonly ModelAbstractApi modelApi;
-            public ObservableCollection<BallModel> balls { set; get; }
+            public ObservableCollection<IModelBall> balls { set; get; }
             public event PropertyChangedEventHandler? PropertyChanged;
             public ICommand ButtonClicked { get; set; }
             string textToInteger;
@@ -26,7 +26,7 @@ namespace ViewModel
             {
             active = true;
             this.modelApi = model;
-            balls = new ObservableCollection<BallModel>();
+            balls = new ObservableCollection<IModelBall>();
             ButtonClicked = new UserCommand(() => StartButtonClicked());
             }
 
@@ -47,9 +47,9 @@ namespace ViewModel
             {
                 while (true)
                 {
-                ObservableCollection<BallModel> ListOfBalls = new ObservableCollection<BallModel>();
+                ObservableCollection<IModelBall> ListOfBalls = new ObservableCollection<IModelBall>();
 
-                foreach (BallModel ball in modelApi.balls)
+                foreach (IModelBall ball in modelApi.balls)
                 {
                     ListOfBalls.Add(ball);
                 }

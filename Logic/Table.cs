@@ -6,11 +6,11 @@ using System.Threading;
 
 namespace Logic
 {
-    public class Table
+    internal class Table
     {
         public int height { get; set; }
         public int widht { get; set; }
-        public List<Ball> balls { get; set; }
+        public List<IBall> balls { get; set; }
 
         private Task movingTask;
         private int time = 20;
@@ -19,7 +19,7 @@ namespace Logic
         {
             this.height = height;
             this.widht = width;
-            this.balls = new List<Ball>();
+            this.balls = new List<IBall>();
         }
 
         public void AddBalls(int count)

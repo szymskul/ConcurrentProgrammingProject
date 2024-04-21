@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Logic
 {
-    public class Ball
+    internal class Ball : IBall
     {
-        public double x { get; set; }
-        public double y { get; set; }
+        private double x;
+        private double y;
         public double velocityX { get; set; }
         public double velocityY { get; set; }
         public double r { get; set; }
@@ -23,7 +23,7 @@ namespace Logic
         }
 
         Random random = new Random();
-        public double getRandomNumber(double min, double max)
+        public override double getRandomNumber(double min, double max)
         {
             if(min > 0 && max > 0)
                 return random.NextDouble() * (max - min) + min;
@@ -31,7 +31,7 @@ namespace Logic
                 return 1;
         }
 
-        public void ChangingPosition(double height, double width)
+        public override void ChangingPosition(double height, double width)
         {
             double next_x = x + velocityX;
             double next_y = y + velocityY;
@@ -47,6 +47,19 @@ namespace Logic
             x = next_x;
             y = next_y;
         }
+
+        public override double X
+        {
+            get => x;
+            set { x = value; }
+        }
+
+        public override double Y
+        {
+            get => y;
+            set { y = value; }
+        }
+
 
     }
 }
