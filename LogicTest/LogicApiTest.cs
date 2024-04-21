@@ -7,7 +7,8 @@ namespace LogicTest
     {
 
     }
-    internal class LogicApiTest
+    [TestClass]
+    public class LogicApiTest
     {
         [TestMethod]
         public void TestLogicApi()
