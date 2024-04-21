@@ -32,7 +32,7 @@ namespace Logic
 
         public void MovingBalls()
         {
-            foreach (Ball ball in balls)
+            foreach (IBall ball in balls)
             {
                 ball.ChangingPosition(height, widht);
 
