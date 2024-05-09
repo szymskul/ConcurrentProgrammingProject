@@ -10,6 +10,7 @@ namespace Data
     {
         public override int Id { get; }
         public override int r { get; } = 10;
+        public override double Mass { get; } = 10;
 
         private bool isRunning = true;
         private Vector2 position;
