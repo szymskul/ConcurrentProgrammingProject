@@ -7,79 +7,64 @@ using System.Windows.Input;
 
 namespace ViewModel
 {
-        public class ViewModel : INotifyPropertyChanged
+    public class ViewModel : INotifyPropertyChanged
+    {
+        private ModelAbstractApi modelApi;
+        public ObservableCollection<IBall> balls { set; get; }
+        public ICommand ButtonClicked { get; set; }
+        private string textToInteger;
+        private bool active;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ViewModel() : this(ModelAbstractApi.CreateApi())
         {
-            private readonly ModelAbstractApi modelApi;
-            public ObservableCollection<IModelBall> balls { set; get; }
-            public event PropertyChangedEventHandler? PropertyChanged;
-            public ICommand ButtonClicked { get; set; }
-            string textToInteger;
-            private Task task;
-            private bool active;
 
-            public ViewModel() : this(ModelAbstractApi.CreateApi())
-            { 
-            
-            }
-
-            public ViewModel(ModelAbstractApi model)
-            {
-            active = true;
-            this.modelApi = model;
-            balls = new ObservableCollection<IModelBall>();
-            ButtonClicked = new UserCommand(() => StartButtonClicked());
-            }
-
-
-            protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-
-            private void StartButtonClicked()
-            {
-                modelApi.GenerateBalls(numberOfBallsToInt());
-                task = new Task(changingPosition);
-                task.Start();
-            }
-
-            public void changingPosition()
-            {
-                while (true)
-                {
-                ObservableCollection<IModelBall> ListOfBalls = new ObservableCollection<IModelBall>();
-
-                foreach (IModelBall ball in modelApi.balls)
-                {
-                    ListOfBalls.Add(ball);
-                }
-                balls = ListOfBalls;
-                RaisePropertyChanged(nameof(balls));
-                Thread.Sleep(10);
-            }
         }
 
-            public int numberOfBallsToInt()
-            {
-                int result;
-                if (Int32.TryParse(numberOfBalls, out result) && numberOfBalls != "0")
-                {
-                    result = Int32.Parse(numberOfBalls);
-                    Active = !Active;
-                    return result;
-                }
-                return 0;
-            }
-            public string numberOfBalls
-            {
-                get { return textToInteger; }
-                set
-                {
-                    textToInteger = value;
-                    RaisePropertyChanged(nameof(numberOfBalls));
-                }
+        public ViewModel(ModelAbstractApi model)
+        {
+            active = true;
+            this.modelApi = model;
+            balls = new ObservableCollection<IBall>();
+            IDisposable observer = modelApi.Subscribe(x => balls.Add(x));
+            ButtonClicked = new UserCommand(() => StartButtonClicked());
+        }
 
+
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void StartButtonClicked()
+        {
+            modelApi.GenerateBalls(numberOfBallsToInt());
+        }
+
+    
+
+        public int numberOfBallsToInt()
+        {
+            int result;
+            if (Int32.TryParse(numberOfBalls, out result) && numberOfBalls != "0")
+            {
+                result = Int32.Parse(numberOfBalls);
+                Active = !Active;
+                return result;
             }
+            return 0;
+        }
+        public string numberOfBalls
+        {
+            get { return textToInteger; }
+            set
+            {
+                textToInteger = value;
+                RaisePropertyChanged(nameof(numberOfBalls));
+            }
+
+        }
 
         public bool Active
         {
