@@ -9,8 +9,8 @@ namespace Data
     internal class Table
     {
         public List<Ball> balls { get; set; }
-        public int height { get; set; }
-        public int widht { get; set; }
+        public int height { get; private set; } = 500;
+        public int width { get; private set; } = 700;
 
         public Table()
         {
@@ -21,7 +21,8 @@ namespace Data
         {
             for(int i = 0; i < ballsCount; i++)
             {
-                balls.Add(new Ball(i + 1));
+                Ball newBall = new Ball(i + 1);
+                balls.Add(newBall);
             }
         }
 

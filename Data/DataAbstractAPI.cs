@@ -5,8 +5,8 @@ namespace Data
 {
     public abstract class DataAbstractAPI : IObserver<IBall>, IObservable<IBall>
     {
-        public abstract int getBoardHeight();
-        public abstract int getBoardWidth();
+        public abstract int getHeightSize();
+        public abstract int getWidthSize();
         public abstract void createBalls(int ballsCount);
         public abstract int getBallsAmount();
 
@@ -38,14 +38,14 @@ namespace Data
                 observers = new List<IObserver<IBall>>();
             }
 
-            public override int getBoardHeight()
+            public override int getHeightSize()
             {
                 return table.height;
             }
 
-            public override int getBoardWidth()
+            public override int getWidthSize()
             {
-                return table.widht;
+                return table.width;
             }
 
             public override int getBallsAmount()

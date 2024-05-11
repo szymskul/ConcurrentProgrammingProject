@@ -46,12 +46,16 @@ namespace ViewModel
 
         public int numberOfBallsToInt()
         {
-            int result;
-            if (Int32.TryParse(numberOfBalls, out result) && numberOfBalls != "0")
+            int number;
+            if (Int32.TryParse(textToInteger, out number) && textToInteger != "0")
             {
-                result = Int32.Parse(numberOfBalls);
-                Active = !Active;
-                return result;
+                number = Int32.Parse(textToInteger);
+                Active = false;
+                if (number > 15)
+                {
+                    return 15;
+                }
+                return number;
             }
             return 0;
         }

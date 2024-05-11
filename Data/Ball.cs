@@ -20,7 +20,6 @@ namespace Data
         internal readonly IList<IObserver<IBall>> observers;
         Stopwatch stopwatch;
         private Task movingTask;
-        Random random = new Random();
 
         internal Ball(int id)
         {
@@ -44,6 +43,9 @@ namespace Data
                 stopwatch.Restart();
                 stopwatch.Start();
                 ChangingPosition(time);
+                Vector2 _speed = Velocity;
+                int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
+                await Task.Delay(sleepTime);
                 stopwatch.Stop();
             }
         }
@@ -55,14 +57,7 @@ namespace Data
             Monitor.Enter(_lock);
             try
             {
-                if(time > 0)
-                {
-                    Move += Velocity * time;
-                }
-                else
-                {
-                    Move = Velocity;
-                }
+                Move += Velocity * time;
                 position += Move;
             }
             catch (SynchronizationLockException exception)
@@ -110,18 +105,11 @@ namespace Data
             return new Unsubscriber(observers, observer);
         }
 
-        private double getRandomNumber(double min, double max)
-        {
-            if (min > 0 && max > 0)
-                return random.NextDouble() * (max - min) + min;
-            else
-                return 1;
-        }
-
         private void createBall()
         {
-            this.position = new Vector2((float)getRandomNumber(21.0, 679.0), (float)getRandomNumber(21.0, 479.0));
-            this.Velocity = new Vector2((float)getRandomNumber(1, 3), (float)getRandomNumber(1, 3));
+            Random random = new Random();
+            this.position = new Vector2(random.Next(1, 500), random.Next(1, 500));
+            this.Velocity = new Vector2((float)(random.NextDouble() * (0.2 - 0) + 0), (float)(random.NextDouble() * (0.2 - 0) + 0));
         }
 
         public override object getLock()

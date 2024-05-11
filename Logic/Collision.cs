@@ -23,46 +23,45 @@ namespace Logic
             return false;
         }
 
-        public static void changingPosition(IBall ball, int height, int width)
+        public static void changingPosition(IBall ball, int heightSize, int widthSize)
         {
             Vector2 newPosition = ball.Position;
+            Vector2 velocity = ball.Velocity;
 
-            if (newPosition.X + ball.r > width || newPosition.X < 0)
+            if ((newPosition.X > heightSize - ball.r && velocity.X > 0) || (newPosition.X < 0 && velocity.X < 0))
             {
-                ball.Velocity *= new Vector2(-1, 1);
+                if(Math.Sign(velocity.X) != Math.Sign(heightSize - newPosition.X))
+                {
+                    ball.Velocity *= new Vector2(-1, 1);
+                }
             }
-            if (newPosition.Y + ball.r > height || newPosition.Y < 0)
+            if ((newPosition.Y > widthSize - ball.r && velocity.Y > 0) || (newPosition.Y < 0 && velocity.Y < 0))
             {
-                ball.Velocity *= new Vector2(1, -1);
+                if (Math.Sign(velocity.Y) != Math.Sign(widthSize - newPosition.Y))
+                {
+                    ball.Velocity *= new Vector2(1,-1);
+                }
             }
         }
 
         public static void collisionProblem(IBall first, IBall second)
         {
-            Vector2 FirstVelocity = first.Velocity;
-            Vector2 FirstPosition = first.Position;
             float FirstMass = (float)first.Mass;
-            Vector2 SecondVelocity = second.Velocity;
-            Vector2 SecondPosition = second.Position;
             float SecondMass = (float)second.Mass;
+            float x1 = first.Velocity.X;
+            float y1 = first.Velocity.Y;
+            float x2 = second.Velocity.X;
+            float y2 = second.Velocity.Y;
 
-            Vector2 deltaPosition = FirstPosition - SecondPosition;
-            float distance = deltaPosition.Length();
 
-            Vector2 normalization = Vector2.Normalize(deltaPosition);
-            Vector2 tangent = new Vector2(-normalization.Y, normalization.X);
+            float newX1 = (x1 * (FirstMass - SecondMass) + 2.0f * SecondMass * x2) / (FirstMass + SecondMass);
+            float newY1 = (y1 * (FirstMass - SecondMass) + 2.0f * SecondMass * y2) / (FirstMass + SecondMass);
 
-            float dpTan1 = Vector2.Dot(FirstVelocity, tangent);
-            float dpTan2 = Vector2.Dot(SecondVelocity, tangent);
+            float newX2 = (x2 * (SecondMass - FirstMass) + 2.0f * FirstMass * x1) / (FirstMass + SecondMass);
+            float newY2 = (y2 * (SecondMass - FirstMass) + 2.0f * FirstMass * y1) / (FirstMass + SecondMass);
 
-            float dpNorm1 = Vector2.Dot(FirstVelocity, normalization);
-            float dpNorm2 = Vector2.Dot(SecondVelocity, normalization);
-
-            float p1 = (dpNorm1 * (FirstMass - SecondMass) + 2.0f * SecondMass * dpNorm2) / (FirstMass + SecondMass);
-            float p2 = (dpNorm2 * (SecondMass - FirstMass) + 2.0f * FirstMass * dpNorm1) / (FirstMass + SecondMass);
-
-            Vector2 FirstNewVelocity = tangent * dpTan1 + normalization * p1;
-            Vector2 SecondNewVelocity = tangent * dpTan2 + normalization * p2;
+            Vector2 FirstNewVelocity = new Vector2(newX1, newY1);
+            Vector2 SecondNewVelocity = new Vector2(newX2, newY2);
 
             first.Velocity = FirstNewVelocity;
             second.Velocity = SecondNewVelocity;

@@ -10,8 +10,8 @@ namespace Model
 {
     public interface IBall : INotifyPropertyChanged
     {
-        double Top { get; }
-        double Left { get; }
+        double PositionX { get; }
+        double PositionY { get; }
         int Diameter { get; }
     }
 
@@ -52,16 +52,13 @@ namespace Model
 
         public override void GenerateBalls(int counts)
         {
-            //logicApi.createBalls(counts);
-            //logicApi.start();
-            for (int i = 0; i < counts; i++)
+            for(int i = 1; i <= counts; i++) 
             {
-                BallModel newBall = new BallModel(0, 0, 15);
+                BallModel newBall = new BallModel(0, 0, 10);
                 Balls.Add(newBall);
                 BallChanged?.Invoke(this, new BallChaneEventArgs() { Ball = newBall });
             }
             logicApi.AddStart(counts);
-
         }
 
         public override IDisposable Subscribe(IObserver<IBall> observer)

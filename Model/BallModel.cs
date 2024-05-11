@@ -8,82 +8,52 @@ namespace Model
 {
     internal class BallModel : IBall
     {
-        //private IBall ball;
 
-        ///public BallModel(IBall ball)
-        //{
-        //this.ball = ball;
-        //}
-
-        //public override double Xposition
-        //{
-        //get { return ball.X; }
-        //}
-
-        //public override double Yposition
-        //{
-        //get { return ball.Y; }
-        //}
+        private double positionX;
+        private double positionY;
         public int Diameter { get; }
         public event PropertyChangedEventHandler PropertyChanged;
-        private double top;
-        private double left;
 
-        public BallModel(double top, double left, int radius)
+        public BallModel(double X, double Y, int radius)
         {
-            Top = top;
-            Left = left;
+            PositionX = X;
+            PositionY = Y;
             Diameter = radius * 2;
         }
 
-        public double Top
+        public double PositionX
         {
-            get { return top; }
+            get { return positionX; }
             set
             {
-                if (top == value)
+                if (positionX == value)
                     return;
-                top = value;
+                positionX = value;
                 RaisePropertyChanged();
             }
         }
 
 
-        public double Left
+        public double PositionY
         {
-            get { return left; }
+            get { return positionY; }
             set
             {
-                if (left == value)
+                if (positionY == value)
                     return;
-                left = value;
+                positionY = value;
                 RaisePropertyChanged();
             }
         }
-
-        public void Move_V(Vector2 position)
-        {
-            Left = position.X;
-            Top = position.Y;
-        }
-
-        public void Move(double poitionX, double positionY)
-        {
-            Left = poitionX;
-            Top = positionY;
-        }
-
-
         private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public void Move(Vector2 position)
         {
-            Left = position.X;
-            Top = position.Y;
+            PositionX = position.X;
+            PositionY = position.Y;
         }
 
 

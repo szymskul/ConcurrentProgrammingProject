@@ -84,7 +84,7 @@ namespace Logic
                             }
                         }
                     }
-                    Collision.changingPosition(ball, dataAPI.getBoardHeight(), dataAPI.getBoardWidth());
+                    Collision.changingPosition(ball, dataAPI.getHeightSize(), dataAPI.getWidthSize());
                     BallChanged?.Invoke(this, new BallChaneEventArgs() { ball = ball });
                 }
                 catch(SynchronizationLockException exception)
