@@ -22,6 +22,17 @@ namespace Logic
             public IBall ball { get; set; }
         }
 
+        public int getHeight()
+        {
+            return (int) 500;
+        }
+
+        public int getWidth()
+        {
+            return (int) 700;
+        }
+
+
         private class LogicLayerAPI : LogicAbstractAPI,IObservable<IBall>
         {
             private readonly DataAbstractAPI dataAPI;
