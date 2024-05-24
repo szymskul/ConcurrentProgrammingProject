@@ -10,6 +10,7 @@ namespace Logic
         public abstract void OnCompleted();
         public abstract void OnError(Exception error);
         public abstract void OnNext(IBall ball);
+        private  readonly object lock_balls = new object();
 
         public abstract IDisposable Subscribe(IObserver<IBall> observer);
         public static LogicAbstractAPI CreateAPI(DataAbstractAPI data = default(DataAbstractAPI))
@@ -75,9 +76,9 @@ namespace Logic
                 throw error;
             }
 
-            public override void OnNext(IBall ball)
+            /*public override void OnNext(IBall ball)
             {
-                Monitor.Enter(ball.getLock());
+                Monitor.Enter(lock_balls);
                 try
                 {
                     if(!ballTree.ContainsKey(ball.Id))
@@ -104,7 +105,31 @@ namespace Logic
                 }
                 finally
                 {
-                    Monitor.Exit(ball.getLock());
+                    Monitor.Exit(lock_balls);
+                }
+            }*/
+
+            public override void OnNext(IBall ball) 
+            {
+                lock (lock_balls)
+                {
+                    if (!ballTree.ContainsKey(ball.Id))
+                    {
+                        ballTree.Add(ball.Id, ball);
+                    }
+
+                    foreach (var item in ballTree)
+                    {
+                        if (item.Key != ball.Id)
+                        {
+                            if (Collision.IsCollision(ball, item.Value))
+                            {
+                                Collision.collisionProblem(ball, item.Value);
+                            }
+                        }
+                    }
+                    Collision.changingPosition(ball, dataAPI.getHeightSize(), dataAPI.getWidthSize());
+                    BallChanged?.Invoke(this, new BallChaneEventArgs() { ball = ball });
                 }
             }
 

@@ -14,12 +14,44 @@ namespace Data
 
         private bool isRunning = true;
         private Vector2 position;
-        public override Vector2 Position { get => position; }
-        public override Vector2 Velocity { get; set; }
-        private static object _lock = new object();
+        private Vector2 velocity;
+        //public override Vector2 Position { get => position; }
+        //public override Vector2 Velocity { get; set; }
+        private readonly object lock_pos = new object();
+        private readonly object lock_vel = new object();
+        //private static object _lock = new object();
         internal readonly IList<IObserver<IBall>> observers;
         Stopwatch stopwatch;
         private Task movingTask;
+
+        public override Vector2 Velocity
+        {
+            get
+            {
+                lock (lock_vel)
+                {
+                    return velocity;
+                }
+            }
+            set
+            {
+                lock (lock_vel)
+                {
+                    velocity = value;
+                }
+            }
+        }
+
+        public override Vector2 Position
+        {
+            get
+            {
+                lock (lock_pos)
+                {
+                    return position;
+                }
+            }
+        }
 
         internal Ball(int id)
         {
@@ -42,15 +74,26 @@ namespace Data
                 long time = stopwatch.ElapsedMilliseconds;
                 stopwatch.Restart();
                 stopwatch.Start();
-                ChangingPosition(time);
+                lock (lock_pos)
+                {
+                    position += velocity * time;
+                }
                 Vector2 _speed = Velocity;
                 int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
                 await Task.Delay(sleepTime);
+                
+                foreach (var observer in observers.ToList())
+                {
+                    if (observer != null)
+                    {
+                        observer.OnNext(this);
+                    }
+                }
                 stopwatch.Stop();
             }
         }
 
-        private void ChangingPosition(long time)
+        /*private void ChangingPosition(long time)
         {
             Vector2 Move = default;
 
@@ -76,7 +119,7 @@ namespace Data
                     observer.OnNext(this);
                 }
             }
-        }
+        }*/
 
         #region provider
 
@@ -109,13 +152,10 @@ namespace Data
         {
             Random random = new Random();
             this.position = new Vector2(random.Next(1, 500), random.Next(1, 500));
-            this.Velocity = new Vector2((float)(random.NextDouble() * (0.2 - 0) + 0), (float)(random.NextDouble() * (0.2 - 0) + 0));
+            this.velocity = new Vector2((float)(random.NextDouble() * (0.2 - 0) + 0), (float)(random.NextDouble() * (0.2 - 0) + 0));
         }
 
-        public override object getLock()
-        {
-            return _lock;
-        }
+       
         #endregion
     }
 }
