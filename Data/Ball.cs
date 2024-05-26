@@ -15,11 +15,8 @@ namespace Data
         private bool isRunning = true;
         private Vector2 position;
         private Vector2 velocity;
-        //public override Vector2 Position { get => position; }
-        //public override Vector2 Velocity { get; set; }
         private readonly object lock_pos = new object();
         private readonly object lock_vel = new object();
-        //private static object _lock = new object();
         internal readonly IList<IObserver<IBall>> observers;
         Stopwatch stopwatch;
         private Task movingTask;
@@ -92,34 +89,6 @@ namespace Data
                 stopwatch.Stop();
             }
         }
-
-        /*private void ChangingPosition(long time)
-        {
-            Vector2 Move = default;
-
-            Monitor.Enter(_lock);
-            try
-            {
-                Move += Velocity * time;
-                position += Move;
-            }
-            catch (SynchronizationLockException exception)
-            {
-                throw new Exception("Synchronization lock not working", exception);
-            }
-            finally
-            {
-                Monitor.Exit(_lock);
-            }
-
-            foreach (var observer in observers.ToList())
-            {
-                if(observer != null)
-                {
-                    observer.OnNext(this);
-                }
-            }
-        }*/
 
         #region provider
 

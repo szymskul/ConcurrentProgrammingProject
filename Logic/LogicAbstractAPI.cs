@@ -76,39 +76,6 @@ namespace Logic
                 throw error;
             }
 
-            /*public override void OnNext(IBall ball)
-            {
-                Monitor.Enter(lock_balls);
-                try
-                {
-                    if(!ballTree.ContainsKey(ball.Id))
-                    {
-                        ballTree.Add(ball.Id, ball);
-                    }
-
-                    foreach(var item in ballTree)
-                    {
-                        if(item.Key != ball.Id)
-                        {
-                            if (Collision.IsCollision(ball, item.Value))
-                            {
-                                Collision.collisionProblem(ball, item.Value);
-                            }
-                        }
-                    }
-                    Collision.changingPosition(ball, dataAPI.getHeightSize(), dataAPI.getWidthSize());
-                    BallChanged?.Invoke(this, new BallChaneEventArgs() { ball = ball });
-                }
-                catch(SynchronizationLockException exception)
-                {
-                    throw new Exception("Checking collision synchronization lock not working", exception);
-                }
-                finally
-                {
-                    Monitor.Exit(lock_balls);
-                }
-            }*/
-
             public override void OnNext(IBall ball) 
             {
                 lock (lock_balls)
@@ -128,9 +95,9 @@ namespace Logic
                             }
                         }
                     }
-                    Collision.changingPosition(ball, dataAPI.getHeightSize(), dataAPI.getWidthSize());
-                    BallChanged?.Invoke(this, new BallChaneEventArgs() { ball = ball });
                 }
+                Collision.changingPosition(ball, dataAPI.getHeightSize(), dataAPI.getWidthSize());
+                BallChanged?.Invoke(this, new BallChaneEventArgs() { ball = ball });
             }
 
             public virtual void Unsubscribe()
