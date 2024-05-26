@@ -78,7 +78,8 @@ namespace Data
                 Vector2 _speed = Velocity;
                 int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
                 await Task.Delay(sleepTime);
-                
+                stopwatch.Stop();
+
                 foreach (var observer in observers.ToList())
                 {
                     if (observer != null)
@@ -86,7 +87,6 @@ namespace Data
                         observer.OnNext(this);
                     }
                 }
-                stopwatch.Stop();
             }
         }
 
