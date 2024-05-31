@@ -69,11 +69,41 @@ namespace Data
 
         private async void MovingBall()
         {
+            stopwatch.Start();
+            float prev_time = 0.0f;
             while (isRunning)
             {
-                long time = stopwatch.ElapsedMilliseconds;
-                stopwatch.Restart();
-                stopwatch.Start();
+                float c_time = stopwatch.ElapsedMilliseconds;
+                float delta_time = c_time - prev_time;
+                const float timeOfTravel = 1f / 60f;
+
+                if(delta_time >= timeOfTravel) 
+                {
+                    lock (lock_pos) 
+                    {
+                        position += velocity * delta_time;
+                    }
+
+                    foreach (var observer in observers.ToList())
+                    {
+                        if (observer != null)
+                        {
+                            observer.OnNext(this);
+                        }
+                    }
+                    prev_time = c_time;
+
+                    lock (lock_dao) 
+                    {
+                        dao.Add(this);
+                    }
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(timeOfTravel));
+
+
+                /*stopwatch.Restart();
+                
                 lock (lock_pos)
                 {
                     position += velocity * time;
@@ -85,16 +115,11 @@ namespace Data
                 Vector2 _speed = Velocity;
                 int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
                 await Task.Delay(sleepTime);
-                stopwatch.Stop();
+                stopwatch.Stop();*/
 
-                foreach (var observer in observers.ToList())
-                {
-                    if (observer != null)
-                    {
-                        observer.OnNext(this);
-                    }
-                }
+               
             }
+            stopwatch.Stop();
         }
 
         #region provider

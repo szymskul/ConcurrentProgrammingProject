@@ -50,7 +50,7 @@
                         <ItemsControl ItemsSource="{Binding balls}" Margin="0,0,3,3">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas Height="575" Width="775" Margin="-3,0,-6,-6"/>
+                                    <Canvas Height="570" Width="770" Margin="-3,0,-6,-6"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
 

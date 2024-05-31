@@ -28,14 +28,14 @@ namespace Logic
             Vector2 newPosition = ball.Position;
             Vector2 velocity = ball.Velocity;
 
-            if ((newPosition.X > heightSize - ball.r && velocity.X > 0) || (newPosition.X < 0 && velocity.X < 0))
+            if ((newPosition.X + ball.r >= heightSize && velocity.X > 0) || (newPosition.X < 0 && velocity.X < 0))
             {
                 if(Math.Sign(velocity.X) != Math.Sign(heightSize - newPosition.X))
                 {
                     ball.Velocity *= new Vector2(-1, 1);
                 }
             }
-            if ((newPosition.Y > widthSize - ball.r && velocity.Y > 0) || (newPosition.Y < 0 && velocity.Y < 0))
+            if ((newPosition.Y + ball.r >= widthSize  && velocity.Y > 0) || (newPosition.Y < 0 && velocity.Y < 0))
             {
                 if (Math.Sign(velocity.Y) != Math.Sign(widthSize - newPosition.Y))
                 {
@@ -46,25 +46,29 @@ namespace Logic
 
         public static void collisionProblem(IBall first, IBall second)
         {
-            float FirstMass = (float)first.Mass;
-            float SecondMass = (float)second.Mass;
-            float x1 = first.Velocity.X;
-            float y1 = first.Velocity.Y;
-            float x2 = second.Velocity.X;
-            float y2 = second.Velocity.Y;
+                int FirstMass = (int)first.Mass;
+                int SecondMass = (int)second.Mass;
+                var distanceVector = second.Position - first.Position;
+                float minDistance = first.r + second.r;
 
+                if (!(distanceVector.LengthSquared() < minDistance * minDistance)) return;
+                var collisionNormal = Vector2.Normalize(distanceVector);
 
-            float newX1 = (x1 * (FirstMass - SecondMass) + 2.0f * SecondMass * x2) / (FirstMass + SecondMass);
-            float newY1 = (y1 * (FirstMass - SecondMass) + 2.0f * SecondMass * y2) / (FirstMass + SecondMass);
+                var relativeVelocity = second.Velocity - first.Velocity;
 
-            float newX2 = (x2 * (SecondMass - FirstMass) + 2.0f * FirstMass * x1) / (FirstMass + SecondMass);
-            float newY2 = (y2 * (SecondMass - FirstMass) + 2.0f * FirstMass * y1) / (FirstMass + SecondMass);
+                var impulseMagnitude = Vector2.Dot(relativeVelocity, collisionNormal);
 
-            Vector2 FirstNewVelocity = new Vector2(newX1, newY1);
-            Vector2 SecondNewVelocity = new Vector2(newX2, newY2);
+                if (impulseMagnitude > 0)
+                    return;
 
-            first.Velocity = FirstNewVelocity;
-            second.Velocity = SecondNewVelocity;
+                var newVelocityFirst = (FirstMass - SecondMass) / (FirstMass + SecondMass) * first.Velocity +
+                                   2 * FirstMass / (FirstMass + SecondMass) * second.Velocity;
+                var newVelocitySecond = 2 * FirstMass / (FirstMass + SecondMass) * first.Velocity +
+                                   (FirstMass - SecondMass) / (FirstMass + SecondMass) * second.Velocity;
+
+                first.Velocity = newVelocityFirst;
+                second.Velocity = newVelocitySecond;
+           
         }
     }
 }
