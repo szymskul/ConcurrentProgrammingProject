@@ -20,6 +20,8 @@ namespace Data
         internal readonly IList<IObserver<IBall>> observers;
         Stopwatch stopwatch;
         private Task movingTask;
+        private DAO dao;
+        private readonly object lock_dao = new object();
 
         public override Vector2 Velocity
         {
@@ -53,6 +55,7 @@ namespace Data
         internal Ball(int id)
         {
             this.Id = id;
+            dao = DAO.CreateInstance();
             stopwatch = new Stopwatch();
             observers = new List<IObserver<IBall>>();
             createBall();
@@ -74,6 +77,10 @@ namespace Data
                 lock (lock_pos)
                 {
                     position += velocity * time;
+                }
+                lock (lock_dao)
+                {
+                    dao.Add(this);
                 }
                 Vector2 _speed = Velocity;
                 int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
