@@ -16,14 +16,15 @@ namespace Data
     {
         private static DAO? instance;
         private static readonly object daoLock = new object();
+        private static readonly object bufferLock = new object();
         private ConcurrentQueue<string> queue;
         private readonly int maxBufferSize = 1000;
         private bool bufferOverflowed;
         
-        public DAO()
+        private DAO()
         {
             queue = new ConcurrentQueue<string>();
-            Write();
+            Task.Run(Write);
         }
 
         public static DAO CreateInstance()
@@ -42,11 +43,16 @@ namespace Data
         {
             string time = DateTime.Now.ToString("h:mm:ss tt");
             string log = time + " Ball: " + ball.Id + " Position: " + vectorFormatToString(ball.Position) + " Velocity: " + vectorFormatToString(ball.Velocity);
-            queue.Enqueue(log);
-            if(queue.Count >= maxBufferSize)
+            Task.Run(() =>
             {
-                bufferOverflowed = true;
-            }
+                if (queue.Count >= maxBufferSize)
+                {
+                    bufferOverflowed = true;
+                }
+                else
+                    queue.Enqueue(log);
+
+            });
         }
 
         private string vectorFormatToString(Vector2 vector)
@@ -54,28 +60,32 @@ namespace Data
             return "X: " + Math.Round(vector.X, 3) + " Y: " + Math.Round(vector.Y, 3);
         }
 
-        private void Write()
+        private async void Write()
         {
-            Task.Run(async () =>
+            await using StreamWriter streamWriter = new StreamWriter("logger_file.json");
+            while(true)
             {
-                using StreamWriter streamWriter = new StreamWriter("logger_file.json");
-                while (true)
-                {
                     while (queue.TryDequeue(out string log))
                     {
                         string logger = JsonSerializer.Serialize(log);
                         await streamWriter.WriteLineAsync(logger);
                     }
-
-                    if (bufferOverflowed)
+                    
+                    bool bufferOverflowedTrue = false;
+                    lock(bufferLock)
                     {
-                        await streamWriter.WriteLineAsync("Buffer overflow occurred!");
-                        bufferOverflowed = false;
+                        if (bufferOverflowed)
+                        {
+                            bufferOverflowedTrue = true;
+                            bufferOverflowed = false;
+                        }
                     }
 
-                    await streamWriter.FlushAsync();
-                }
-            });
+                if (bufferOverflowedTrue)
+                    await streamWriter.WriteLineAsync("Buffer overflow occurred!");
+                    
+                await streamWriter.FlushAsync();
+            }
         }
     }
 }

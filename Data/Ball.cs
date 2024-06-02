@@ -21,7 +21,6 @@ namespace Data
         Stopwatch stopwatch;
         private Task movingTask;
         private DAO dao;
-        private readonly object lock_dao = new object();
 
         public override Vector2 Velocity
         {
@@ -92,32 +91,11 @@ namespace Data
                         }
                     }
                     prev_time = c_time;
-
-                    lock (lock_dao) 
-                    {
                         dao.Add(this);
-                    }
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(timeOfTravel));
 
-
-                /*stopwatch.Restart();
-                
-                lock (lock_pos)
-                {
-                    position += velocity * time;
-                }
-                lock (lock_dao)
-                {
-                    dao.Add(this);
-                }
-                Vector2 _speed = Velocity;
-                int sleepTime = (int)(1 / Math.Sqrt(Math.Pow(_speed.X, 2) + Math.Pow(_speed.Y, 2)));
-                await Task.Delay(sleepTime);
-                stopwatch.Stop();*/
-
-               
             }
             stopwatch.Stop();
         }

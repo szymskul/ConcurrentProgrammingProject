@@ -51,14 +51,16 @@ namespace Logic
                 var distanceVector = second.Position - first.Position;
                 float minDistance = first.r + second.r;
 
-                if (!(distanceVector.LengthSquared() < minDistance * minDistance)) return;
+                if (!(distanceVector.LengthSquared() < minDistance * minDistance)) 
+                    return;
+                
                 var collisionNormal = Vector2.Normalize(distanceVector);
 
-                var relativeVelocity = second.Velocity - first.Velocity;
+                var velocityBetween = second.Velocity - first.Velocity;
 
-                var impulseMagnitude = Vector2.Dot(relativeVelocity, collisionNormal);
+                var compVelocityBetween = Vector2.Dot(velocityBetween, collisionNormal);
 
-                if (impulseMagnitude > 0)
+                if (compVelocityBetween > 0)
                     return;
 
                 var newVelocityFirst = (FirstMass - SecondMass) / (FirstMass + SecondMass) * first.Velocity +
