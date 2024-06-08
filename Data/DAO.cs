@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Data
@@ -17,13 +20,13 @@ namespace Data
         private static DAO? instance;
         private static readonly object daoLock = new object();
         private static readonly object bufferLock = new object();
-        private ConcurrentQueue<string> queue;
+        private BlockingCollection<LoggerBall> queue;
         private readonly int maxBufferSize = 1000;
         private bool bufferOverflowed;
         
         private DAO()
         {
-            queue = new ConcurrentQueue<string>();
+            queue = new BlockingCollection<LoggerBall>(new ConcurrentQueue<LoggerBall>(), maxBufferSize);
             Task.Run(Write);
         }
 
@@ -39,52 +42,54 @@ namespace Data
             }
         }
 
-        public void Add(Ball ball)
+        public void Add(Ball ball, DateTime date )
         {
-            string time = DateTime.Now.ToString("h:mm:ss tt");
-            string log = time + " Ball: " + ball.Id + " Position: " + vectorFormatToString(ball.Position) + " Velocity: " + vectorFormatToString(ball.Velocity);
+            //string time = DateTime.Now.ToString("h:mm:ss tt");
+            //string log = time + " Ball: " + ball.Id + " Position: " + vectorFormatToString(ball.Position) + " Velocity: " + vectorFormatToString(ball.Velocity);
+            
             Task.Run(() =>
             {
-                if (queue.Count >= maxBufferSize)
+                if (queue.TryAdd(new LoggerBall(date, ball.Id, ball.Position, ball.Velocity)))
                 {
-                    bufferOverflowed = true;
+                    return;
                 }
                 else
-                    queue.Enqueue(log);
+                {
+                    lock (bufferLock)
+                    {
+                        bufferOverflowed = true;
+                    }
+                }
 
             });
         }
 
-        private string vectorFormatToString(Vector2 vector)
-        {
-            return "X: " + Math.Round(vector.X, 3) + " Y: " + Math.Round(vector.Y, 3);
-        }
 
         private async void Write()
         {
-            await using StreamWriter streamWriter = new StreamWriter("logger_file.json");
-            while(true)
-            {
-                    while (queue.TryDequeue(out string log))
+            await using StreamWriter streamWriter = new StreamWriter("logger_file.json", false,  Encoding.UTF8);
+            
+            
+           while (!queue.IsCompleted)
+           {
+                bool bufferOverflowedTrue = false;
+                lock (bufferLock)
+                {
+                    if (bufferOverflowed)
                     {
-                        string logger = JsonSerializer.Serialize(log);
-                        await streamWriter.WriteLineAsync(logger);
+                        bufferOverflowedTrue = true;
+                        bufferOverflowed = false;
                     }
-                    
-                    bool bufferOverflowedTrue = false;
-                    lock(bufferLock)
-                    {
-                        if (bufferOverflowed)
-                        {
-                            bufferOverflowedTrue = true;
-                            bufferOverflowed = false;
-                        }
-                    }
-
+                }
+                        
                 if (bufferOverflowedTrue)
                     await streamWriter.WriteLineAsync("Buffer overflow occurred!");
-                    
+                LoggerBall ball_taken = queue.Take();
+
+
+                await streamWriter.WriteLineAsync(JsonConvert.SerializeObject(ball_taken));
                 await streamWriter.FlushAsync();
+
             }
         }
     }

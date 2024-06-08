@@ -91,7 +91,7 @@ namespace Data
                         }
                     }
                     prev_time = c_time;
-                        dao.Add(this);
+                    dao.Add(this, DateTime.Now);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(timeOfTravel));
